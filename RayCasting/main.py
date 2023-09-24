@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import keyboard
+import time
+
 
 mapArray = [[1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,1],
@@ -19,7 +21,7 @@ mapArray = [[1,1,1,1,1,1,1,1],
 for i in range(len(mapArray)):
     for j in range(len(mapArray[1])):
         if mapArray[i][j] == 1:
-            mapArray[i][j] = [0.5,0.5,0.5]#list(np.random.uniform(0,1,3))
+            mapArray[i][j] = [0.1,0.1,0.1]#list(np.random.uniform(0,1,3))
         # if mapArray[i][j] == 2:
         #     mapArray[i][j] = list(np.random.uniform(0,1,3))
 
@@ -52,6 +54,8 @@ while True:
         height_mult = 0.5
         sin,cos = (ray_sens*np.sin(rot_i), ray_sens*np.cos(rot_i))
         n = 0
+
+        # ray pathing out
         while True:
             x = x + cos
             y = y + sin
@@ -86,28 +90,59 @@ while True:
     # plot data cleard
     plt.clf()
 
-
     # MOVEMENT
     # same logic as ray movement (forward,back)
 
-    key = keyboard.read_key()
+    # key = keyboard.read_key()
+    # key = keyboard.read_key()
     x, y = (posx, posy)
 
     move_sens = 0.3
     rot_sens = np.pi/20
+
     # same logic as ray movement (forward,back)
-    if key == 'up':
+    if keyboard.is_pressed('up'):
         x,y = (x + move_sens*np.cos(rot), y + move_sens*np.sin(rot))
-    elif key == 'down':
+    elif keyboard.is_pressed('down'):
         x,y = (x - move_sens*np.cos(rot), y - move_sens*np.sin(rot))
     # change rotation only
-    elif key == 'left':
+    elif keyboard.is_pressed('left'):
         rot = rot - rot_sens
-    elif key == 'right':
+    elif keyboard.is_pressed('right'):
         rot = rot + rot_sens
     # exit ggame
-    elif key == 'esc':
+    elif keyboard.is_pressed('esc'):
         break
+    # spawn car
+    elif keyboard.is_pressed('v'):
+        print("CAR CREATED")
+        carExist=True
+        cary,carx= (5,1)
+        mapArray[int(cary)][int(carx)] = 2
+    else:
+        pass
+
+    # if key == 'up':
+    #     x,y = (x + move_sens*np.cos(rot), y + move_sens*np.sin(rot))
+    # elif key == 'down':
+    #     x,y = (x - move_sens*np.cos(rot), y - move_sens*np.sin(rot))
+    # # change rotation only
+    # elif key == 'left':
+    #     rot = rot - rot_sens
+    # elif key == 'right':
+    #     rot = rot + rot_sens
+    # # exit ggame
+    # elif key == 'esc':
+    #     break
+    # # spawn car
+    # elif key == 'v':
+    #     print("CAR CREATED")
+    #     carExist=True
+    #     cary,carx= (5,1)
+    #     mapArray[int(cary)][int(carx)] = 2
+    # else:
+    #     pass
+
 
     # if running into exit, leave game
     # else, movement reassignment only occurs if not a wall
@@ -116,23 +151,15 @@ while True:
             break
         posx, posy = (x,y)
     
-    # spawn car
-    if key == 'v':
-        print("CAR CREATED")
-        carExist=True
-        cary,carx= (5,1)
-        mapArray[int(cary)][int(carx)] = 2
-
 
     if carExist==True:
         mapArray[int(cary)][int(carx)] = 2
         carx_next = carx + 0.5
         
         print(f"Current car pos: y={cary}, x={carx}")
-        print(f"Checking car pos: y={cary}, x={carx_next} with mapArray = {mapArray[int(cary)][int(carx_next)]}")
-
+    
         # hit a wall
-        if mapArray[int(cary)][int(carx_next)] == [0.5,0.5,0.5]:
+        if mapArray[int(cary)][int(carx_next)] == [0.1,0.1,0.1]:
             carExist = False
             print("CAR DEAD")
         # if empty next path, car moves
