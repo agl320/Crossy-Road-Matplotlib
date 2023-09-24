@@ -27,10 +27,10 @@ def main():
 
     # skybox
     # imported image is a surface; must convert to type of surfarray (so we can manipulate with numpy)
-    sky = pg.image.load("skybox.jpg")
+    sky = pg.image.load("skybox.png")
     sky = pg.surfarray.array3d(pg.transform.scale(sky, (360, halfvres * 2)))
     # floor texture
-    floor = pg.surfarray.array3d(pg.image.load("floor.jpg"))
+    floor = pg.surfarray.array3d(pg.image.load("floor.png"))
 
     while running:
         for event in pg.event.get():
