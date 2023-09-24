@@ -1,10 +1,13 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import keyboard
-import time
-
 
 mapArray = [[1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,1],
@@ -25,9 +28,6 @@ for i in range(len(mapArray)):
         # if mapArray[i][j] == 2:
         #     mapArray[i][j] = list(np.random.uniform(0,1,3))
 
-
-
-
 # starting position
 posx, posy = (1,1)
 # top right corner
@@ -38,10 +38,13 @@ rot = np.pi/4
 
 carExist = False
 
+objTick = 0 
+
 # iterate through each degree of view
 # will scan from rot - 30deg to rot + 30deg
 # rot is essentially net zero (relative to view), but will be some value relative to the map
 while True:
+    
     for i in range(60):
         rot_i = rot + np.deg2rad(i-30)
 
@@ -77,7 +80,10 @@ while True:
                 
 
         # -height to +height to make camera at a angle of 0 relative to ground
-        plt.vlines(i, -height, height, lw=8, colors=c)
+        if mapArray[int(x)][int(y)] == [0.1,0.1,0.1]:
+            plt.vlines(i, -height, height, lw=8, colors=c)
+        elif mapArray[int(x)][int(y)] == [1,1,1]:
+            plt.vlines(i, -height, height/2, lw=8, colors=c)
 
     plt.axis('off')
     plt.tight_layout()
@@ -115,10 +121,9 @@ while True:
         break
     # spawn car
     elif keyboard.is_pressed('v'):
-        print("CAR CREATED")
         carExist=True
-        cary,carx= (5,1)
-        mapArray[int(cary)][int(carx)] = 2
+        carposx,carposy= (5,1)
+        mapArray[int(carposx)][int(carposy)] = [1,1,1]
     else:
         pass
 
@@ -138,8 +143,8 @@ while True:
     # elif key == 'v':
     #     print("CAR CREATED")
     #     carExist=True
-    #     cary,carx= (5,1)
-    #     mapArray[int(cary)][int(carx)] = 2
+    #     carposx,carposy= (5,1)
+    #     mapArray[int(carposx)][int(carposy)] = 2
     # else:
     #     pass
 
@@ -147,27 +152,33 @@ while True:
     # if running into exit, leave game
     # else, movement reassignment only occurs if not a wall
     if mapArray[int(x)][int(y)] == 0:
+        print("NOT A WALL")
         if int(posx) == exitx and int(posy) == exity:
             break
         posx, posy = (x,y)
+    # death if touching car
+    elif mapArray[int(x)][int(y)] == [1,1,1]:
+        print("=========TOUCHING CAR=========")
+        break
     
-
+    
     if carExist==True:
-        mapArray[int(cary)][int(carx)] = 2
-        carx_next = carx + 0.5
+        mapArray[int(carposx)][int(carposy)] = [1,1,1]
+        carposy_next = carposy + 0.5
         
-        print(f"Current car pos: y={cary}, x={carx}")
+        print(f"Current car pos: y={carposx}, x={carposy}")
     
         # hit a wall
-        if mapArray[int(cary)][int(carx_next)] == [0.1,0.1,0.1]:
+        if mapArray[int(carposx)][int(carposy_next)] == [0.1,0.1,0.1]:
             carExist = False
             print("CAR DEAD")
+            mapArray[int(carposx)][int(carposy)] = 0
         # if empty next path, car moves
         # will overlap (no collision between self)
-        elif mapArray[int(cary)][int(carx_next)] == 0 or [1,1,1]:
-            mapArray[int(cary)][int(carx)] = 0
-            mapArray[int(cary)][int(carx_next)] = 2
-            carx = carx_next
+        elif mapArray[int(carposx)][int(carposy_next)] == 0 or [1,1,1]:
+            mapArray[int(carposx)][int(carposy)] = 0
+            mapArray[int(carposx)][int(carposy_next)] = 2
+            carposy = carposy_next
             print("NEW CAR CREATED")
         
     # checking each position in map
@@ -178,4 +189,18 @@ while True:
                 mapArray[i][j] = [1,1,1]
 
 
+    objTick = objTick + 1
+
+    # if objTick%4==0:
+    #     carExist=True
+    #     carposx,carposy= (5,1)
+    #     mapArray[int(carposx)][int(carposy)] = [1,1,1]
+
 plt.close()
+
+# Obstacle object
+# carx,cary position in mapArray
+# for car in carlist
+#   render car
+#       delete past carx,cary
+#       create new carx,cary_next
