@@ -11,11 +11,25 @@ mapArray = [[1,1,1,1,1,1,1,1],
             [1,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,1],
             [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
             [1,1,1,1,1,1,1,1]]
+
+# checking each position in map
+# for each value of each row
+for i in range(len(mapArray)):
+    for j in range(len(mapArray[1])):
+        if mapArray[i][j] == 1:
+            mapArray[i][j] = [0.5,0.5,0.5]#list(np.random.uniform(0,1,3))
+        # if mapArray[i][j] == 2:
+        #     mapArray[i][j] = list(np.random.uniform(0,1,3))
+
+
+
 
 # starting position
 posx, posy = (1,1)
-exitx, exity = (3,3)
+# top right corner
+exitx, exity = (mapArray[len(mapArray)-1],mapArray[len(mapArray)-1])
 # initial rotation
 # pi/4 is looking 180/4 -> 45 degrees NE
 rot = np.pi/4 
@@ -49,11 +63,17 @@ while True:
             # int(var) rounds the position of the ray
             if mapArray[int(x)][int(y)] != 0:
                 # calculates height relative to player
-                height = 1/(height_mult*ray_sens*n)
+                # height = 1/(height_mult*ray_sens*n)
+
+                # colour assignment
+                height = np.clip(1/(height_mult*ray_sens*n), 0, 1)
+                c = np.asarray(mapArray[int(x)][int(y)]) * (0.3 + 0.7 * height**2)
+
                 break
+                
 
         # -height to +height to make camera at a angle of 0 relative to ground
-        plt.vlines(i, -height, height, lw=8)
+        plt.vlines(i, -height, height, lw=8, colors=c)
 
     plt.axis('off')
     plt.tight_layout()
@@ -97,7 +117,7 @@ while True:
         posx, posy = (x,y)
     
     # spawn car
-    if key == 'c':
+    if key == 'v':
         print("CAR CREATED")
         carExist=True
         cary,carx= (5,1)
@@ -112,16 +132,23 @@ while True:
         print(f"Checking car pos: y={cary}, x={carx_next} with mapArray = {mapArray[int(cary)][int(carx_next)]}")
 
         # hit a wall
-        if mapArray[int(cary)][int(carx_next)] == 1:
+        if mapArray[int(cary)][int(carx_next)] == [0.5,0.5,0.5]:
             carExist = False
             print("CAR DEAD")
         # if empty next path, car moves
         # will overlap (no collision between self)
-        elif mapArray[int(cary)][int(carx_next)] == 0 or 2:
+        elif mapArray[int(cary)][int(carx_next)] == 0 or [1,1,1]:
             mapArray[int(cary)][int(carx)] = 0
             mapArray[int(cary)][int(carx_next)] = 2
             carx = carx_next
             print("NEW CAR CREATED")
+        
+    # checking each position in map
+    # for each value of each row
+    for i in range(len(mapArray)):
+        for j in range(len(mapArray[1])):
+            if mapArray[i][j] == 2:
+                mapArray[i][j] = [1,1,1]
 
 
 plt.close()
