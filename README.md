@@ -1,6 +1,6 @@
 # Crossy Road Matplotlib
 
-Crossy Road reimagined in 3D, rendered with Matplotlib. Utilizes raycasting to render walls. Floorcasting demonstration in `./FloorCasting`. Use arrow keys to move, esc to exit, and initial conditions can be set in starting popup window.
+Crossy Road reimagined in 3D, rendered with Matplotlib. Utilizes ray-casting to render walls. Floor-casting demonstration in `./FloorCasting`. Use arrow keys to move, esc to exit, and initial conditions can be set in starting popup window.
 
 Run with:
 ```python
