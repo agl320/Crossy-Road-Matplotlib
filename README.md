@@ -1,4 +1,4 @@
-# ray-casting-crossy-road
+# Crossy Road Matplotlib
 
 Crossy Road reimagined in 3D, rendered with Matplotlib. Utilizes raycasting to render walls.
 
