@@ -1,7 +1,12 @@
-# Raycasting
+# ray-casting-crossy-road
 
-Floorcasting and Raycasting demonstration
+Crossy Road reimagined in 3D, rendered with Matplotlib.
 
-Raycasting with matplotlib
+Run with:
+```python
+py .\RayCasting\main.py
+```
 
-Floorcasting in PyGame
+Example:
+
+![ray-casting](https://github.com/xegativ/ray-casting-crossy-road/assets/52055203/d0e46957-cd03-4658-8f6f-704f05dae5d4)
